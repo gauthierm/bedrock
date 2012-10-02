@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from mozorg.hierarchy import PageNode
 
-hierarchy = PageNode('Styleguide', children=(
+hierarchy = PageNode('Home', children=(
     PageNode('Home', template='styleguide/home.html'),
     PageNode('Identity', path='identity', children=(
         PageNode('Mozilla', path='mozilla', children=(
