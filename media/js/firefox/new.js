@@ -6,16 +6,26 @@
     'use strict';
 
     if (isFirefox()) {
-        if (isFirefoxUpToDate()) {
+        var $body = $('body');
+        var latestFirefoxVersion = $body.attr('data-latest-firefox');
+        latestFirefoxVersion = parseInt(latestFirefoxVersion.split('.')[0], 10);
+        latestFirefoxVersion--; // subtract one since a silent update may be
+                                // complete and the user hasn't restarted their
+                                // browser. This will be removed once there's
+                                // a way to get the current version directly
+                                // from the browser
+
+        if (isFirefoxUpToDate(latestFirefoxVersion + '')) {
             $('html').addClass('firefox-latest');
         } else {
             $('html').addClass('firefox-old');
         }
     }
 
-    // TODO: is any of this needed? It's from the old version of the file
-
     if (site.platform === 'android') {
+        $('#download-button-android .download-subtitle').html(
+            $('.android.download-button-wrapper').data('upgradeSubtitle'));
+
         return;
     }
 
