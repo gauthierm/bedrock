@@ -35,87 +35,90 @@
     var locale = path_parts[1];
     var virtual_url = ('/' + locale + '/products/download.html' +
                        query_str + 'referrer=' + referrer);
-    var $scene1 = $('#scene1');
-    var $stage = $('#stage-firefox');
-    var $thankYou = $('.thankyou');
-    var hash_change = ('onhashchange' in window);
 
-    function track_and_redirect(url) {
-        if (_gaq) {
-            window._gaq.push(['_trackPageview', virtual_url]);
-        }
-        setTimeout(function() {
-            window.location.href = url;
-        }, 500);
-    }
+    $(document).ready(function() {
+        var $scene1 = $('#scene1');
+        var $stage = $('#stage-firefox');
+        var $thankYou = $('.thankyou');
+        var hash_change = ('onhashchange' in window);
 
-    function show_scene(scene) {
-        var CSSbottom = (scene === 2) ? '-400px' : 0;
-        $stage.data('scene', scene);
-        $('.scene').css('visibility', 'visible');
-        if (!Modernizr.csstransitions) {
-            $stage.animate({
-                bottom: CSSbottom
-            }, 400);
-        } else {
-            $stage.toggleClass('scene2');
-        }
-        if (scene === 2) {
+        function track_and_redirect(url) {
+            if (_gaq) {
+                window._gaq.push(['_trackPageview', virtual_url]);
+            }
             setTimeout(function() {
-                $scene1.css('visibility', 'hidden');
-                $thankYou.focus();
+                window.location.href = url;
             }, 500);
         }
-    }
 
-    // Load images on load so as not to block the loading of other images.
-    $(window).on('load', function() {
-        // Screen 1 is unique for IE < 9
-        if (site.platform === 'windows' && $.browser.msie && $.browser.version < 9) {
-            $('html').addClass('winIE8');
+        function show_scene(scene) {
+            var CSSbottom = (scene === 2) ? '-400px' : 0;
+            $stage.data('scene', scene);
+            $('.scene').css('visibility', 'visible');
+            if (!Modernizr.csstransitions) {
+                $stage.animate({
+                    bottom: CSSbottom
+                }, 400);
+            } else {
+                $stage.toggleClass('scene2');
+            }
+            if (scene === 2) {
+                setTimeout(function() {
+                    $scene1.css('visibility', 'hidden');
+                    $thankYou.focus();
+                }, 500);
+            }
         }
 
-        $('body').addClass('ready-for-scene2');
+        // Load images on load so as not to block the loading of other images.
+        $(window).on('load', function() {
+            // Screen 1 is unique for IE < 9
+            if (site.platform === 'windows' && $.browser.msie && $.browser.version < 9) {
+                $('html').addClass('winIE8');
+            }
 
-        // initiate download/scene2 if coming directly to #download
-        if (location.hash === '#download-fx' && site.platform !== 'other') {
-            show_scene(2);
-            $('#direct-download-link').trigger('click');
-        }
-    });
+            $('body').addClass('ready-for-scene2');
 
-    $(function() {
-        // Pull Firefox download link from the download button and add to the
-        // 'click here' link.
-        // TODO: Remove and generate link in bedrock.
-        $('#direct-download-link').attr(
-            'href', $('.download-list li:visible .download-link').attr('href')
-        );
-
-        $stage.on('click', '#direct-download-link, .download-link', function(e) {
-            e.preventDefault();
-
-            track_and_redirect($(e.currentTarget).attr('href'));
-
-            if ($stage.data('scene') !== 2) {
-                if (hash_change) {
-                    location.hash = '#download-fx';
-                } else {
-                    show_scene(2);
-                }
+            // initiate download/scene2 if coming directly to #download
+            if (location.hash === '#download-fx' && site.platform !== 'other') {
+                show_scene(2);
+                $('#direct-download-link').trigger('click');
             }
         });
 
-        if (hash_change) {
-            $(window).on('hashchange', function() {
-                if (location.hash === '#download-fx') {
-                    show_scene(2);
-                }
-                if (location.hash === '') {
-                    show_scene(1);
+        $(function() {
+            // Pull Firefox download link from the download button and add to the
+            // 'click here' link.
+            // TODO: Remove and generate link in bedrock.
+            $('#direct-download-link').attr(
+                'href', $('.download-list li:visible .download-link').attr('href')
+            );
+
+            $stage.on('click', '#direct-download-link, .download-link', function(e) {
+                e.preventDefault();
+
+                track_and_redirect($(e.currentTarget).attr('href'));
+
+                if ($stage.data('scene') !== 2) {
+                    if (hash_change) {
+                        location.hash = '#download-fx';
+                    } else {
+                        show_scene(2);
+                    }
                 }
             });
-        }
+
+            if (hash_change) {
+                $(window).on('hashchange', function() {
+                    if (location.hash === '#download-fx') {
+                        show_scene(2);
+                    }
+                    if (location.hash === '') {
+                        show_scene(1);
+                    }
+                });
+            }
+        });
     });
 
     // Add GA custom tracking and external link tracking
