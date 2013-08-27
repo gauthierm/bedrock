@@ -32,7 +32,9 @@
     {{ js('site') }}
 
     {% block js_pretrack %}{# include JavaScript that must be run pre GA tracking here #}{% endblock %}
-    {% include 'includes/google-analytics.html' %}
+    {% block google_analytics %}
+      {% include 'includes/google-analytics.html' %}
+    {% endblock %}
   </head>
 
   <body id="{% block body_id %}{% endblock %}" class="html-{{ DIR }} {% block body_class %}{% endblock %}"{% block body_attrs %}{% endblock %}>
